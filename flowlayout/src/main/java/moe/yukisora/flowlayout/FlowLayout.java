@@ -1,12 +1,18 @@
 package moe.yukisora.flowlayout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class FlowLayout extends ViewGroup {
+    private static final int DEFAULT_ITEM_SPACING = 0;
+    private static final int DEFAULT_ROW_SPACING = 0;
     private Shapes shapes;
+
+    private int itemSpacing;
+    private int rowSpacing;
 
     public FlowLayout(Context context) {
         this(context, null);
@@ -14,6 +20,10 @@ public class FlowLayout extends ViewGroup {
 
     public FlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.FlowLayout, 0, 0);
+        itemSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_item_spacing, DEFAULT_ITEM_SPACING);
+        rowSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_row_spacing, DEFAULT_ROW_SPACING);
 
         shapes = new Shapes();
     }
@@ -32,8 +42,9 @@ public class FlowLayout extends ViewGroup {
         int rowWidth = contentLeft;
         int maxHeight = contentTop;
         int rowHeight = 0;
-        int count = getChildCount();
-        for (int i = 0; i < count; i++) {
+        int totalCount = getChildCount();
+        int itemCount = 0;
+        for (int i = 0; i < totalCount; i++) {
             View child = getChildAt(i);
 
             if (child.getVisibility() == View.GONE) {
@@ -64,20 +75,23 @@ public class FlowLayout extends ViewGroup {
             int h = child.getMeasuredHeight();
             int childWidth = marginLeft + w + marginRight;
             int childHeight = marginTop + h + marginBottom;
-            if (rowWidth + childWidth > contentRight) {
+            if (rowWidth + (itemCount > 0 ? itemSpacing : 0) + childWidth > contentRight) {
                 maxWidth = Math.max(maxWidth, rowWidth);
-                maxHeight += rowHeight;
+                maxHeight += rowHeight + rowSpacing;
+
                 rowWidth = contentLeft;
                 rowHeight = 0;
+                itemCount = 0;
             }
 
             // view shape
-            int l = marginLeft + rowWidth;
-            int t = marginTop + maxHeight;
+            int l = rowWidth + (itemCount > 0 ? itemSpacing : 0) + marginLeft;
+            int t = maxHeight + marginTop;
             shapes.set(i, l, t, w, h);
 
-            rowWidth += childWidth;
+            rowWidth += (itemCount > 0 ? itemSpacing : 0) + childWidth;
             rowHeight = Math.max(rowHeight, childHeight);
+            itemCount++;
         }
         maxWidth = Math.max(maxWidth, rowWidth);
         maxHeight += rowHeight;
@@ -116,5 +130,21 @@ public class FlowLayout extends ViewGroup {
     @Override
     protected LayoutParams generateDefaultLayoutParams() {
         return new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    }
+
+    public int getItemSpacing() {
+        return itemSpacing;
+    }
+
+    public void setItemSpacing(int itemSpacing) {
+        this.itemSpacing = itemSpacing;
+    }
+
+    public int getRowSpacing() {
+        return rowSpacing;
+    }
+
+    public void setRowSpacing(int rowSpacing) {
+        this.rowSpacing = rowSpacing;
     }
 }

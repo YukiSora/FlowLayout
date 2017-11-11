@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FlowLayout">
+
+        <attr name="fl_item_spacing" format="dimension" />
+        <attr name="fl_row_spacing" format="dimension" />
+
+    </declare-styleable>
+
+</resources>
