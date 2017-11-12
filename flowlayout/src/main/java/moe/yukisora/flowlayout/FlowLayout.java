@@ -19,12 +19,17 @@ public class FlowLayout extends ViewGroup {
     public static final int ALIGN_RIGHT = 1;
     public static final int ALIGN_CENTER = 2;
     public static final int ALIGN_JUSTIFY = 3;
+    public static final int VERTICAL_ALIGN_TOP = 0;
+    public static final int VERTICAL_ALIGN_MIDDLE = 1;
+    public static final int VERTICAL_ALIGN_BOTTOM = 2;
     private List<Integer> itemCounts;
-    private List<Integer> rowTops;
     private List<Integer> rowWidths;
+    private List<Integer> rowHeights;
     private int itemSpacing;
     private int rowSpacing;
     private int align;
+    private int verticalAlign;
+
     public FlowLayout(Context context) {
         this(context, null);
     }
@@ -36,16 +41,17 @@ public class FlowLayout extends ViewGroup {
         itemSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_item_spacing, DEFAULT_ITEM_SPACING);
         rowSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_row_spacing, DEFAULT_ROW_SPACING);
         align = typedArray.getInt(R.styleable.FlowLayout_fl_align, ALIGN_LEFT);
+        verticalAlign = typedArray.getInt(R.styleable.FlowLayout_fl_vertical_align, VERTICAL_ALIGN_TOP);
 
         itemCounts = new ArrayList<>();
-        rowTops = new ArrayList<>();
+        rowHeights = new ArrayList<>();
         rowWidths = new ArrayList<>();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         itemCounts.clear();
-        rowTops.clear();
+        rowHeights.clear();
         rowWidths.clear();
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -61,7 +67,6 @@ public class FlowLayout extends ViewGroup {
         int rowWidth = 0;
         int maxHeight = paddingTop;
         int rowHeight = 0;
-        rowTops.add(maxHeight);
         int totalCount = getChildCount();
         int itemCount = 0;
         for (int i = 0; i < totalCount; i++) {
@@ -98,10 +103,10 @@ public class FlowLayout extends ViewGroup {
                 maxHeight += rowHeight + rowSpacing;
                 itemCounts.add(itemCount);
                 rowWidths.add(rowWidth);
+                rowHeights.add(rowHeight);
 
                 rowWidth = 0;
                 rowHeight = 0;
-                rowTops.add(maxHeight);
                 itemCount = 0;
             }
 
@@ -113,6 +118,7 @@ public class FlowLayout extends ViewGroup {
         maxHeight += rowHeight + paddingBottom;
         itemCounts.add(itemCount);
         rowWidths.add(rowWidth);
+        rowHeights.add(rowHeight);
 
         layoutWidth = widthMode == MeasureSpec.EXACTLY ? layoutWidth : maxWidth;
         layoutHeight = heightMode == MeasureSpec.EXACTLY ? layoutHeight : maxHeight;
@@ -123,14 +129,16 @@ public class FlowLayout extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int layoutWidth = getWidth();
         int paddingLeft = getPaddingLeft();
+        int paddingTop = getPaddingTop();
         int paddingRight = getPaddingRight();
 
+        int currentLayoutHeight = paddingTop;
         int rowCount = itemCounts.size();
         int viewCount = 0;
         for (int i = 0; i < rowCount; i++) {
             int itemCount = itemCounts.get(i);
-            int rowTop = rowTops.get(i);
             int rowWidth = rowWidths.get(i);
+            int rowHeight = rowHeights.get(i);
             int currentRowWidth = 0;
 
             // align
@@ -157,23 +165,37 @@ public class FlowLayout extends ViewGroup {
                 int marginLeft = 0;
                 int marginTop = 0;
                 int marginRight = 0;
+                int marginBottom = 0;
                 LayoutParams layoutParams = child.getLayoutParams();
                 if (layoutParams instanceof MarginLayoutParams) {
                     MarginLayoutParams marginLayoutParams = (MarginLayoutParams)layoutParams;
                     marginLeft = marginLayoutParams.leftMargin;
                     marginTop = marginLayoutParams.topMargin;
                     marginRight = marginLayoutParams.rightMargin;
+                    marginBottom = marginLayoutParams.bottomMargin;
+                }
+
+                int width = child.getMeasuredWidth();
+                int height = child.getMeasuredHeight();
+
+                // vertical align
+                int topSpacing = 0;
+                if (verticalAlign == VERTICAL_ALIGN_MIDDLE) {
+                    topSpacing = (rowHeight - (marginTop + height + marginBottom)) / 2;
+                }
+                else if (verticalAlign == VERTICAL_ALIGN_BOTTOM) {
+                    topSpacing = rowHeight - (marginTop + height + marginBottom);
                 }
 
                 // measure location
-                int width = child.getMeasuredWidth();
-                int height = child.getMeasuredHeight();
                 int left = paddingLeft + leftSpacing + currentRowWidth + (j > 0 ? itemSpacing + intervalSpacing : 0) + marginLeft;
-                int top = rowTop + marginTop;
+                int top = currentLayoutHeight + marginTop + topSpacing;
                 child.layout(left, top, left + width, top + height);
 
                 currentRowWidth += (j > 0 ? itemSpacing + intervalSpacing : 0) + marginLeft + width + marginRight;
             }
+
+            currentLayoutHeight += rowHeight + rowSpacing;
         }
     }
 
@@ -220,8 +242,23 @@ public class FlowLayout extends ViewGroup {
         requestLayout();
     }
 
+    @VerticalAlign
+    public int getVerticalAlign() {
+        return verticalAlign;
+    }
+
+    public void setVerticalAlign(@VerticalAlign int verticalAlign) {
+        this.verticalAlign = verticalAlign;
+        requestLayout();
+    }
+
     @IntDef({ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER, ALIGN_JUSTIFY})
     @Retention(RetentionPolicy.SOURCE)
     @interface Align {
+    }
+
+    @IntDef({VERTICAL_ALIGN_TOP, VERTICAL_ALIGN_MIDDLE, VERTICAL_ALIGN_BOTTOM})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface VerticalAlign {
     }
 }

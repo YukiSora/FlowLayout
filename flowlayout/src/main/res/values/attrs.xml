@@ -11,6 +11,11 @@
             <enum name="center" value="2" />
             <enum name="justify" value="3" />
         </attr>
+        <attr name="fl_vertical_align">
+            <enum name="top" value="0" />
+            <enum name="middle" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
 
     </declare-styleable>
 

@@ -62,6 +62,18 @@ public class SampleActivity extends Activity {
             "PL/I",
             "CFML"
     };
+    public static final int[] textSize = new int[]{
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,11 +82,13 @@ public class SampleActivity extends Activity {
 
         final FlowLayout flowLayout = findViewById(R.id.flowLayout);
         RadioGroup align = findViewById(R.id.align);
+        RadioGroup verticaAlign = findViewById(R.id.verticalAlign);
 
         for (int i = 0; i < 50; i++) {
             TextView textView = new TextView(this);
             String text = i + ": " + texts[i];
             textView.setText(text);
+            textView.setTextSize(textSize[texts[i].length() > 10 ? 9 : texts[i].length() - 1]);
             ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10, 10, 10, 10);
             textView.setLayoutParams(layoutParams);
@@ -98,6 +112,24 @@ public class SampleActivity extends Activity {
                         break;
                     case R.id.justify:
                         flowLayout.setAlign(FlowLayout.ALIGN_JUSTIFY);
+                        break;
+                }
+            }
+        });
+
+        // vertical align
+        verticaAlign.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                switch (id) {
+                    case R.id.top:
+                        flowLayout.setVerticalAlign(FlowLayout.VERTICAL_ALIGN_TOP);
+                        break;
+                    case R.id.middle:
+                        flowLayout.setVerticalAlign(FlowLayout.VERTICAL_ALIGN_MIDDLE);
+                        break;
+                    case R.id.bottom:
+                        flowLayout.setVerticalAlign(FlowLayout.VERTICAL_ALIGN_BOTTOM);
                         break;
                 }
             }
