@@ -87,6 +87,7 @@ public class SampleActivity extends Activity {
         RadioGroup align = findViewById(R.id.align);
         RadioGroup verticalAlign = findViewById(R.id.verticalAlign);
         RadioGroup direction = findViewById(R.id.direction);
+        RadioGroup lastRowAlign = findViewById(R.id.lastRowAlign);
         Button add = findViewById(R.id.add);
         Button removeAll = findViewById(R.id.removeAll);
 
@@ -94,7 +95,7 @@ public class SampleActivity extends Activity {
             String text = getText();
             TextView textView = new TextView(SampleActivity.this);
             textView.setText(index + ": " + text);
-            textView.setTextSize(textSize[text.length() > 10 ? 9 : text.length() - 1]);
+//            textView.setTextSize(textSize[text.length() > 10 ? 9 : text.length() - 1]);
             ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10, 10, 10, 10);
             textView.setLayoutParams(layoutParams);
@@ -157,6 +158,30 @@ public class SampleActivity extends Activity {
                         break;
                     case R.id.rtl:
                         flowLayout.setDirection(FlowLayout.DIRECTION_RTL);
+                        break;
+                }
+            }
+        });
+
+        // last row align
+        lastRowAlign.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                switch (id) {
+                    case R.id.lastRowLeft:
+                        flowLayout.setLastRowAlign(FlowLayout.ALIGN_LEFT);
+                        break;
+                    case R.id.lastRowRight:
+                        flowLayout.setLastRowAlign(FlowLayout.ALIGN_RIGHT);
+                        break;
+                    case R.id.lastRowCenter:
+                        flowLayout.setLastRowAlign(FlowLayout.ALIGN_CENTER);
+                        break;
+                    case R.id.lastRowJustify:
+                        flowLayout.setLastRowAlign(FlowLayout.ALIGN_JUSTIFY);
+                        break;
+                    case R.id.lastRowInherit:
+                        flowLayout.setLastRowAlign(FlowLayout.ALIGN_INHERIT);
                         break;
                 }
             }

@@ -17,6 +17,7 @@ public class FlowLayout extends ViewGroup {
     public static final int ALIGN_RIGHT = 1;
     public static final int ALIGN_CENTER = 2;
     public static final int ALIGN_JUSTIFY = 3;
+    public static final int ALIGN_INHERIT = 4;
     public static final int DEFAULT_ITEM_SPACING = 0;
     public static final int DEFAULT_ROW_SPACING = 0;
     public static final int DIRECTION_LTR = 0;
@@ -27,11 +28,12 @@ public class FlowLayout extends ViewGroup {
     private List<Integer> itemCounts;
     private List<Integer> rowWidths;
     private List<Integer> rowHeights;
-    private int align;
-    private int direction;
+    @Align private int align;
+    @Direction private int direction;
     private int itemSpacing;
+    @LastRowAlign private int lastRowAlign;
     private int rowSpacing;
-    private int verticalAlign;
+    @VerticalAlign private int verticalAlign;
 
     public FlowLayout(Context context) {
         this(context, null);
@@ -44,6 +46,7 @@ public class FlowLayout extends ViewGroup {
         align = typedArray.getInt(R.styleable.FlowLayout_fl_align, ALIGN_LEFT);
         direction = typedArray.getInt(R.styleable.FlowLayout_fl_direction, DIRECTION_LTR);
         itemSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_item_spacing, DEFAULT_ITEM_SPACING);
+        lastRowAlign = typedArray.getInt(R.styleable.FlowLayout_fl_last_row_align, ALIGN_INHERIT);
         rowSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_row_spacing, DEFAULT_ROW_SPACING);
         verticalAlign = typedArray.getInt(R.styleable.FlowLayout_fl_vertical_align, VERTICAL_ALIGN_TOP);
 
@@ -134,7 +137,6 @@ public class FlowLayout extends ViewGroup {
         int layoutWidth = getWidth();
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
 
         int currentLayoutHeight = paddingTop;
         int rowCount = itemCounts.size();
@@ -146,15 +148,16 @@ public class FlowLayout extends ViewGroup {
             int currentRowWidth = 0;
 
             // align
+            int currentRowAlign = i == rowCount - 1 && lastRowAlign != ALIGN_INHERIT ? lastRowAlign : align;
             int leftSpacing = 0;
-            if (align == ALIGN_RIGHT) {
+            if (currentRowAlign == ALIGN_RIGHT) {
                 leftSpacing = layoutWidth - rowWidth;
             }
-            else if (align == ALIGN_CENTER) {
+            else if (currentRowAlign == ALIGN_CENTER) {
                 leftSpacing = (layoutWidth - rowWidth) / 2;
             }
             int intervalSpacing = 0;
-            if (align == ALIGN_JUSTIFY && itemCount != 1) {
+            if (currentRowAlign == ALIGN_JUSTIFY && itemCount != 1) {
                 intervalSpacing = (layoutWidth - rowWidth) / (itemCount - 1);
             }
 
@@ -219,24 +222,6 @@ public class FlowLayout extends ViewGroup {
         return new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
-    public int getItemSpacing() {
-        return itemSpacing;
-    }
-
-    public void setItemSpacing(int itemSpacing) {
-        this.itemSpacing = itemSpacing;
-        requestLayout();
-    }
-
-    public int getRowSpacing() {
-        return rowSpacing;
-    }
-
-    public void setRowSpacing(int rowSpacing) {
-        this.rowSpacing = rowSpacing;
-        requestLayout();
-    }
-
     @Align
     public int getAlign() {
         return align;
@@ -244,16 +229,6 @@ public class FlowLayout extends ViewGroup {
 
     public void setAlign(@Align int align) {
         this.align = align;
-        requestLayout();
-    }
-
-    @VerticalAlign
-    public int getVerticalAlign() {
-        return verticalAlign;
-    }
-
-    public void setVerticalAlign(@VerticalAlign int verticalAlign) {
-        this.verticalAlign = verticalAlign;
         requestLayout();
     }
 
@@ -267,6 +242,44 @@ public class FlowLayout extends ViewGroup {
         requestLayout();
     }
 
+    public int getItemSpacing() {
+        return itemSpacing;
+    }
+
+    public void setItemSpacing(int itemSpacing) {
+        this.itemSpacing = itemSpacing;
+        requestLayout();
+    }
+
+    @LastRowAlign
+    public int getLastRowAlign() {
+        return lastRowAlign;
+    }
+
+    public void setLastRowAlign(@LastRowAlign int lastRowAlign) {
+        this.lastRowAlign = lastRowAlign;
+        requestLayout();
+    }
+
+    public int getRowSpacing() {
+        return rowSpacing;
+    }
+
+    public void setRowSpacing(int rowSpacing) {
+        this.rowSpacing = rowSpacing;
+        requestLayout();
+    }
+
+    @VerticalAlign
+    public int getVerticalAlign() {
+        return verticalAlign;
+    }
+
+    public void setVerticalAlign(@VerticalAlign int verticalAlign) {
+        this.verticalAlign = verticalAlign;
+        requestLayout();
+    }
+
     @IntDef({ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER, ALIGN_JUSTIFY})
     @Retention(RetentionPolicy.SOURCE)
     @interface Align {
@@ -275,6 +288,11 @@ public class FlowLayout extends ViewGroup {
     @IntDef({DIRECTION_LTR, DIRECTION_RTL})
     @Retention(RetentionPolicy.SOURCE)
     @interface Direction {
+    }
+
+    @IntDef({ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER, ALIGN_JUSTIFY, ALIGN_INHERIT})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface LastRowAlign {
     }
 
     @IntDef({VERTICAL_ALIGN_TOP, VERTICAL_ALIGN_MIDDLE, VERTICAL_ALIGN_BOTTOM})

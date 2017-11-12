@@ -3,22 +3,29 @@
 
     <declare-styleable name="FlowLayout">
 
-        <attr name="fl_item_spacing" format="dimension" />
-        <attr name="fl_row_spacing" format="dimension" />
         <attr name="fl_align">
             <enum name="left" value="0" />
             <enum name="right" value="1" />
             <enum name="center" value="2" />
             <enum name="justify" value="3" />
         </attr>
+        <attr name="fl_direction">
+            <enum name="ltr" value="0" />
+            <enum name="rtl" value="1" />
+        </attr>
+        <attr name="fl_last_row_align">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+            <enum name="center" value="2" />
+            <enum name="justify" value="3" />
+            <enum name="inherit" value="4" />
+        </attr>
+        <attr name="fl_item_spacing" format="dimension" />
+        <attr name="fl_row_spacing" format="dimension" />
         <attr name="fl_vertical_align">
             <enum name="top" value="0" />
             <enum name="middle" value="1" />
             <enum name="bottom" value="2" />
-        </attr>
-        <attr name="fl_direction">
-            <enum name="ltr" value="0" />
-            <enum name="rtl" value="1" />
         </attr>
 
     </declare-styleable>
