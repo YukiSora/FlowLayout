@@ -13,21 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlowLayout extends ViewGroup {
-    public static final int DEFAULT_ITEM_SPACING = 0;
-    public static final int DEFAULT_ROW_SPACING = 0;
     public static final int ALIGN_LEFT = 0;
     public static final int ALIGN_RIGHT = 1;
     public static final int ALIGN_CENTER = 2;
     public static final int ALIGN_JUSTIFY = 3;
+    public static final int DEFAULT_ITEM_SPACING = 0;
+    public static final int DEFAULT_ROW_SPACING = 0;
+    public static final int DIRECTION_LTR = 0;
+    public static final int DIRECTION_RTL = 1;
     public static final int VERTICAL_ALIGN_TOP = 0;
     public static final int VERTICAL_ALIGN_MIDDLE = 1;
     public static final int VERTICAL_ALIGN_BOTTOM = 2;
     private List<Integer> itemCounts;
     private List<Integer> rowWidths;
     private List<Integer> rowHeights;
+    private int align;
+    private int direction;
     private int itemSpacing;
     private int rowSpacing;
-    private int align;
     private int verticalAlign;
 
     public FlowLayout(Context context) {
@@ -38,9 +41,10 @@ public class FlowLayout extends ViewGroup {
         super(context, attrs);
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.FlowLayout, 0, 0);
+        align = typedArray.getInt(R.styleable.FlowLayout_fl_align, ALIGN_LEFT);
+        direction = typedArray.getInt(R.styleable.FlowLayout_fl_direction, DIRECTION_LTR);
         itemSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_item_spacing, DEFAULT_ITEM_SPACING);
         rowSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_row_spacing, DEFAULT_ROW_SPACING);
-        align = typedArray.getInt(R.styleable.FlowLayout_fl_align, ALIGN_LEFT);
         verticalAlign = typedArray.getInt(R.styleable.FlowLayout_fl_vertical_align, VERTICAL_ALIGN_TOP);
 
         itemCounts = new ArrayList<>();
@@ -154,8 +158,8 @@ public class FlowLayout extends ViewGroup {
                 intervalSpacing = (layoutWidth - rowWidth) / (itemCount - 1);
             }
 
-            for (int j = 0; j < itemCount; j++, viewCount++) {
-                View child = getChildAt(viewCount);
+            for (int j = 0; j < itemCount; j++) {
+                View child = getChildAt(viewCount + (direction == DIRECTION_LTR ? j : itemCount - j - 1));
 
                 if (child.getVisibility() == View.GONE) {
                     continue;
@@ -195,6 +199,7 @@ public class FlowLayout extends ViewGroup {
                 currentRowWidth += (j > 0 ? itemSpacing + intervalSpacing : 0) + marginLeft + width + marginRight;
             }
 
+            viewCount += itemCount;
             currentLayoutHeight += rowHeight + rowSpacing;
         }
     }
@@ -252,9 +257,24 @@ public class FlowLayout extends ViewGroup {
         requestLayout();
     }
 
+    @Direction
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(@Direction int direction) {
+        this.direction = direction;
+        requestLayout();
+    }
+
     @IntDef({ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER, ALIGN_JUSTIFY})
     @Retention(RetentionPolicy.SOURCE)
     @interface Align {
+    }
+
+    @IntDef({DIRECTION_LTR, DIRECTION_RTL})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface Direction {
     }
 
     @IntDef({VERTICAL_ALIGN_TOP, VERTICAL_ALIGN_MIDDLE, VERTICAL_ALIGN_BOTTOM})

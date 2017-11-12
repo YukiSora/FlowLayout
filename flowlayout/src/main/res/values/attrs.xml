@@ -16,6 +16,10 @@
             <enum name="middle" value="1" />
             <enum name="bottom" value="2" />
         </attr>
+        <attr name="fl_direction">
+            <enum name="ltr" value="0" />
+            <enum name="rtl" value="1" />
+        </attr>
 
     </declare-styleable>
 

@@ -82,7 +82,8 @@ public class SampleActivity extends Activity {
 
         final FlowLayout flowLayout = findViewById(R.id.flowLayout);
         RadioGroup align = findViewById(R.id.align);
-        RadioGroup verticaAlign = findViewById(R.id.verticalAlign);
+        RadioGroup verticalAlign = findViewById(R.id.verticalAlign);
+        RadioGroup direction = findViewById(R.id.direction);
 
         for (int i = 0; i < 50; i++) {
             TextView textView = new TextView(this);
@@ -118,7 +119,7 @@ public class SampleActivity extends Activity {
         });
 
         // vertical align
-        verticaAlign.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        verticalAlign.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int id) {
                 switch (id) {
@@ -130,6 +131,21 @@ public class SampleActivity extends Activity {
                         break;
                     case R.id.bottom:
                         flowLayout.setVerticalAlign(FlowLayout.VERTICAL_ALIGN_BOTTOM);
+                        break;
+                }
+            }
+        });
+
+        // direction
+        direction.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                switch (id) {
+                    case R.id.ltr:
+                        flowLayout.setDirection(FlowLayout.DIRECTION_LTR);
+                        break;
+                    case R.id.rtl:
+                        flowLayout.setDirection(FlowLayout.DIRECTION_RTL);
                         break;
                 }
             }
