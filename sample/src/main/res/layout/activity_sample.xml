@@ -1,15 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <moe.yukisora.flowlayout.FlowLayout
-        android:id="@+id/flowLayout"
-        app:fl_row_spacing="5dp"
-        app:fl_item_spacing="10dp"
+    <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:overScrollMode="never">
+
+        <moe.yukisora.flowlayout.FlowLayout
+            android:id="@+id/flowLayout"
+            app:fl_row_spacing="5dp"
+            app:fl_item_spacing="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
+
+    <TextView
+        android:text="Align: "
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</ScrollView>
+    <RadioGroup
+        android:id="@+id/align"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/left"
+            android:text="Left"
+            android:checked="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/right"
+            android:text="Right"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/center"
+            android:text="Center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/justify"
+            android:text="Justify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </RadioGroup>
+
+</LinearLayout>

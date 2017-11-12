@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import moe.yukisora.flowlayout.FlowLayout;
@@ -67,7 +68,8 @@ public class SampleActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
-        FlowLayout flowLayout = findViewById(R.id.flowLayout);
+        final FlowLayout flowLayout = findViewById(R.id.flowLayout);
+        RadioGroup align = findViewById(R.id.align);
 
         for (int i = 0; i < 50; i++) {
             TextView textView = new TextView(this);
@@ -76,7 +78,29 @@ public class SampleActivity extends Activity {
             ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10, 10, 10, 10);
             textView.setLayoutParams(layoutParams);
+
             flowLayout.addView(textView);
         }
+
+        // align
+        align.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                switch (id) {
+                    case R.id.left:
+                        flowLayout.setAlign(FlowLayout.ALIGN_LEFT);
+                        break;
+                    case R.id.right:
+                        flowLayout.setAlign(FlowLayout.ALIGN_RIGHT);
+                        break;
+                    case R.id.center:
+                        flowLayout.setAlign(FlowLayout.ALIGN_CENTER);
+                        break;
+                    case R.id.justify:
+                        flowLayout.setAlign(FlowLayout.ALIGN_JUSTIFY);
+                        break;
+                }
+            }
+        });
     }
 }
