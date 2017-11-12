@@ -6,10 +6,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FlowLayout extends ViewGroup {
     private static final int DEFAULT_ITEM_SPACING = 0;
     private static final int DEFAULT_ROW_SPACING = 0;
-    private Shapes shapes;
+    private List<Integer> itemCounts;
+    private List<Integer> rowTops;
 
     private int itemSpacing;
     private int rowSpacing;
@@ -25,23 +29,29 @@ public class FlowLayout extends ViewGroup {
         itemSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_item_spacing, DEFAULT_ITEM_SPACING);
         rowSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_row_spacing, DEFAULT_ROW_SPACING);
 
-        shapes = new Shapes();
+        itemCounts = new ArrayList<>();
+        rowTops = new ArrayList<>();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        itemCounts.clear();
+        rowTops.clear();
+
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int layoutWidth = MeasureSpec.getSize(widthMeasureSpec);
         int layoutHeight = MeasureSpec.getSize(heightMeasureSpec);
-        int contentLeft = getPaddingLeft();
-        int contentTop = getPaddingTop();
-        int contentRight = layoutWidth - getPaddingRight();
+        int paddingLeft = getPaddingLeft();
+        int paddingTop = getPaddingTop();
+        int paddingRight = getPaddingRight();
+        int paddingBottom = getPaddingBottom();
 
         int maxWidth = 0;
-        int rowWidth = contentLeft;
-        int maxHeight = contentTop;
+        int rowWidth = 0;
+        int maxHeight = paddingTop;
         int rowHeight = 0;
+        rowTops.add(maxHeight);
         int totalCount = getChildCount();
         int itemCount = 0;
         for (int i = 0; i < totalCount; i++) {
@@ -71,31 +81,26 @@ public class FlowLayout extends ViewGroup {
             }
 
             // wrap
-            int w = child.getMeasuredWidth();
-            int h = child.getMeasuredHeight();
-            int childWidth = marginLeft + w + marginRight;
-            int childHeight = marginTop + h + marginBottom;
-            if (rowWidth + (itemCount > 0 ? itemSpacing : 0) + childWidth > contentRight) {
+            int childWidth = marginLeft + child.getMeasuredWidth() + marginRight;
+            int childHeight = marginTop + child.getMeasuredHeight() + marginBottom;
+            if (paddingLeft + rowWidth + (itemCount > 0 ? itemSpacing : 0) + childWidth + paddingRight > layoutWidth) {
                 maxWidth = Math.max(maxWidth, rowWidth);
                 maxHeight += rowHeight + rowSpacing;
+                itemCounts.add(itemCount);
 
-                rowWidth = contentLeft;
+                rowWidth = 0;
                 rowHeight = 0;
+                rowTops.add(maxHeight);
                 itemCount = 0;
             }
-
-            // view shape
-            int l = rowWidth + (itemCount > 0 ? itemSpacing : 0) + marginLeft;
-            int t = maxHeight + marginTop;
-            shapes.set(i, l, t, w, h);
 
             rowWidth += (itemCount > 0 ? itemSpacing : 0) + childWidth;
             rowHeight = Math.max(rowHeight, childHeight);
             itemCount++;
         }
         maxWidth = Math.max(maxWidth, rowWidth);
-        maxHeight += rowHeight;
-        maxHeight += getPaddingBottom();
+        maxHeight += rowHeight + paddingBottom;
+        itemCounts.add(itemCount);
 
         layoutWidth = widthMode == MeasureSpec.EXACTLY ? layoutWidth : maxWidth;
         layoutHeight = heightMode == MeasureSpec.EXACTLY ? layoutHeight : maxHeight;
@@ -104,16 +109,45 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
+        int layoutWidth = getWidth();
+        int paddingLeft = getPaddingLeft();
+        int paddingRight = getPaddingRight();
 
-            if (child.getVisibility() == View.GONE) {
-                continue;
+        int rowCount = itemCounts.size();
+        int viewCount = 0;
+        for (int i = 0; i < rowCount; i++) {
+            int rowTop = rowTops.get(i);
+            int rowWidth = 0;
+
+            int itemCount = itemCounts.get(i);
+            for (int j = 0; j < itemCount; j++, viewCount++) {
+                View child = getChildAt(viewCount);
+
+                if (child.getVisibility() == View.GONE) {
+                    continue;
+                }
+
+                // margin
+                int marginLeft = 0;
+                int marginTop = 0;
+                int marginRight = 0;
+                LayoutParams layoutParams = child.getLayoutParams();
+                if (layoutParams instanceof MarginLayoutParams) {
+                    MarginLayoutParams marginLayoutParams = (MarginLayoutParams)layoutParams;
+                    marginLeft = marginLayoutParams.leftMargin;
+                    marginTop = marginLayoutParams.topMargin;
+                    marginRight = marginLayoutParams.rightMargin;
+                }
+
+                // measure location
+                int width = child.getMeasuredWidth();
+                int height = child.getMeasuredHeight();
+                int left = paddingLeft + rowWidth + (j > 0 ? itemSpacing : 0) + marginLeft;
+                int top = rowTop + marginTop;
+                child.layout(left, top, left + width, top + height);
+
+                rowWidth += (j > 0 ? itemSpacing : 0) + marginLeft + width + marginRight;
             }
-
-            Shape shape = shapes.get(i);
-            child.layout(shape.x, shape.y, shape.x + shape.w, shape.y + shape.h);
         }
     }
 
