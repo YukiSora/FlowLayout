@@ -3,7 +3,9 @@ package moe.yukisora.flowlayout.sample;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -74,6 +76,7 @@ public class SampleActivity extends Activity {
             18,
             19,
     };
+    private int index;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,15 +87,23 @@ public class SampleActivity extends Activity {
         RadioGroup align = findViewById(R.id.align);
         RadioGroup verticalAlign = findViewById(R.id.verticalAlign);
         RadioGroup direction = findViewById(R.id.direction);
+        Button add = findViewById(R.id.add);
+        Button removeAll = findViewById(R.id.removeAll);
 
         for (int i = 0; i < 50; i++) {
-            TextView textView = new TextView(this);
-            String text = i + ": " + texts[i];
-            textView.setText(text);
-            textView.setTextSize(textSize[texts[i].length() > 10 ? 9 : texts[i].length() - 1]);
+            String text = getText();
+            TextView textView = new TextView(SampleActivity.this);
+            textView.setText(index + ": " + text);
+            textView.setTextSize(textSize[text.length() > 10 ? 9 : text.length() - 1]);
             ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10, 10, 10, 10);
             textView.setLayoutParams(layoutParams);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    flowLayout.removeView(view);
+                }
+            });
 
             flowLayout.addView(textView);
         }
@@ -150,5 +161,45 @@ public class SampleActivity extends Activity {
                 }
             }
         });
+
+        // add
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text = getText();
+                TextView textView = new TextView(SampleActivity.this);
+                textView.setText(index + ": " + text);
+                textView.setTextSize(textSize[text.length() > 10 ? 9 : text.length() - 1]);
+                ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(10, 10, 10, 10);
+                textView.setLayoutParams(layoutParams);
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        flowLayout.removeView(view);
+                    }
+                });
+
+                flowLayout.addView(textView);
+            }
+        });
+
+        //remove all
+        removeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flowLayout.removeAllViews();
+            }
+        });
+    }
+
+    private String getText() {
+        String text = texts[index];
+        index++;
+        if (index >= 50) {
+            index = 0;
+        }
+
+        return text;
     }
 }
