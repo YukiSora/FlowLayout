@@ -164,9 +164,9 @@ public class FlowLayout extends ViewGroup {
 
             for (int j = 0; j < itemCount; j++) {
                 View child = getChildAt(viewCount + (direction == DIRECTION_LTR ? j : itemCount - j - 1));
-
-                if (child.getVisibility() == View.GONE) {
-                    continue;
+                while (child.getVisibility() == View.GONE) {
+                    viewCount++;
+                    child = getChildAt(viewCount + (direction == DIRECTION_LTR ? j : itemCount - j - 1));
                 }
 
                 // margin
