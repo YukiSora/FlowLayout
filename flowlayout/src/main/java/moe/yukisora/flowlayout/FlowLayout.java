@@ -49,6 +49,7 @@ public class FlowLayout extends ViewGroup {
         lastRowAlign = typedArray.getInt(R.styleable.FlowLayout_fl_last_row_align, ALIGN_INHERIT);
         rowSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_row_spacing, DEFAULT_ROW_SPACING);
         verticalAlign = typedArray.getInt(R.styleable.FlowLayout_fl_vertical_align, VERTICAL_ALIGN_TOP);
+        typedArray.recycle();
 
         itemCounts = new ArrayList<>();
         rowHeights = new ArrayList<>();
