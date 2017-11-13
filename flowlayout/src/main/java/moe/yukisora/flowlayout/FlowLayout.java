@@ -25,15 +25,21 @@ public class FlowLayout extends ViewGroup {
     public static final int VERTICAL_ALIGN_TOP = 0;
     public static final int VERTICAL_ALIGN_MIDDLE = 1;
     public static final int VERTICAL_ALIGN_BOTTOM = 2;
+    public static final int UNDEFINED = -1;
     private List<Integer> itemCounts;
     private List<Integer> rowWidths;
     private List<Integer> rowHeights;
-    @Align private int align;
-    @Direction private int direction;
+    @Align
+    private int align;
+    @Direction
+    private int direction;
     private int itemSpacing;
-    @LastRowAlign private int lastRowAlign;
+    @LastRowAlign
+    private int lastRowAlign;
+    private int maxItemsPerRow;
     private int rowSpacing;
-    @VerticalAlign private int verticalAlign;
+    @VerticalAlign
+    private int verticalAlign;
 
     public FlowLayout(Context context) {
         this(context, null);
@@ -47,6 +53,7 @@ public class FlowLayout extends ViewGroup {
         direction = typedArray.getInt(R.styleable.FlowLayout_fl_direction, DIRECTION_LTR);
         itemSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_item_spacing, DEFAULT_ITEM_SPACING);
         lastRowAlign = typedArray.getInt(R.styleable.FlowLayout_fl_last_row_align, ALIGN_INHERIT);
+        maxItemsPerRow = typedArray.getInt(R.styleable.FlowLayout_fl_max_items_per_row, UNDEFINED);
         rowSpacing = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_fl_row_spacing, DEFAULT_ROW_SPACING);
         verticalAlign = typedArray.getInt(R.styleable.FlowLayout_fl_vertical_align, VERTICAL_ALIGN_TOP);
         typedArray.recycle();
@@ -106,7 +113,7 @@ public class FlowLayout extends ViewGroup {
             // wrap
             int childWidth = marginLeft + child.getMeasuredWidth() + marginRight;
             int childHeight = marginTop + child.getMeasuredHeight() + marginBottom;
-            if (paddingLeft + rowWidth + (itemCount > 0 ? itemSpacing : 0) + childWidth + paddingRight > layoutWidth) {
+            if (paddingLeft + rowWidth + (itemCount > 0 ? itemSpacing : 0) + childWidth + paddingRight > layoutWidth || maxItemsPerRow != UNDEFINED && itemCount == maxItemsPerRow) {
                 maxWidth = Math.max(maxWidth, rowWidth);
                 maxHeight += rowHeight + rowSpacing;
                 itemCounts.add(itemCount);
@@ -259,6 +266,15 @@ public class FlowLayout extends ViewGroup {
 
     public void setLastRowAlign(@LastRowAlign int lastRowAlign) {
         this.lastRowAlign = lastRowAlign;
+        requestLayout();
+    }
+
+    public int getMaxItemsPerRow() {
+        return maxItemsPerRow;
+    }
+
+    public void setMaxItemsPerRow(int maxItemsPerRow) {
+        this.maxItemsPerRow = maxItemsPerRow;
         requestLayout();
     }
 

@@ -21,6 +21,9 @@
             <enum name="inherit" value="4" />
         </attr>
         <attr name="fl_item_spacing" format="dimension" />
+        <attr name="fl_max_items_per_row" format="integer">
+            <enum name="undefined" value="-1" />
+        </attr>
         <attr name="fl_row_spacing" format="dimension" />
         <attr name="fl_vertical_align">
             <enum name="top" value="0" />
