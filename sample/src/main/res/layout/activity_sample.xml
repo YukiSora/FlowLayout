@@ -2,10 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_margin="8dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,18 +14,18 @@
 
         <moe.yukisora.flowlayout.FlowLayout
             android:id="@+id/flowLayout"
-            app:fl_row_spacing="5dp"
-            app:fl_item_spacing="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:fl_item_spacing="10dp"
+            app:fl_row_spacing="5dp" />
 
     </ScrollView>
 
     <TextView
-        android:text="Align: "
-        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Align: " />
 
     <RadioGroup
         android:id="@+id/align"
@@ -36,40 +36,40 @@
 
         <RadioButton
             android:id="@+id/left"
-            android:text="Left"
-            android:checked="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Left" />
 
         <RadioButton
             android:id="@+id/right"
-            android:text="Right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Right" />
 
         <RadioButton
             android:id="@+id/center"
-            android:text="Center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Center" />
 
         <RadioButton
             android:id="@+id/justify"
-            android:text="Justify"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Justify" />
 
     </RadioGroup>
 
     <TextView
-        android:text="Vertical align: "
-        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Vertical align: " />
 
     <RadioGroup
         android:id="@+id/verticalAlign"
@@ -80,33 +80,33 @@
 
         <RadioButton
             android:id="@+id/top"
-            android:text="Top"
-            android:checked="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Top" />
 
         <RadioButton
             android:id="@+id/middle"
-            android:text="Middle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Middle" />
 
         <RadioButton
             android:id="@+id/bottom"
-            android:text="Bottom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Bottom" />
 
     </RadioGroup>
 
     <TextView
-        android:text="Direction: "
-        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Direction: " />
 
     <RadioGroup
         android:id="@+id/direction"
@@ -117,26 +117,26 @@
 
         <RadioButton
             android:id="@+id/ltr"
-            android:text="LTR"
-            android:checked="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="LTR" />
 
         <RadioButton
             android:id="@+id/rtl"
-            android:text="RTL"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="RTL" />
 
     </RadioGroup>
 
     <TextView
-        android:text="Last row align: "
-        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Last row align: " />
 
     <RadioGroup
         android:id="@+id/lastRowAlign"
@@ -147,44 +147,44 @@
 
         <RadioButton
             android:id="@+id/lastRowLeft"
-            android:text="Left"
-            android:textSize="10sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Left"
+            android:textSize="10sp" />
 
         <RadioButton
             android:id="@+id/lastRowRight"
-            android:text="Right"
-            android:textSize="10sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Right"
+            android:textSize="10sp" />
 
         <RadioButton
             android:id="@+id/lastRowCenter"
-            android:text="Center"
-            android:textSize="10sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Center"
+            android:textSize="10sp" />
 
         <RadioButton
             android:id="@+id/lastRowJustify"
-            android:text="Justify"
-            android:textSize="10sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Justify"
+            android:textSize="10sp" />
 
         <RadioButton
             android:id="@+id/lastRowInherit"
-            android:text="Inherit"
-            android:checked="true"
-            android:textSize="10sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Inherit"
+            android:textSize="10sp" />
 
     </RadioGroup>
 
@@ -196,17 +196,17 @@
 
         <Button
             android:id="@+id/add"
-            android:text="Add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Add" />
 
         <Button
             android:id="@+id/removeAll"
-            android:text="Remove All"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Remove All" />
 
     </LinearLayout>
 
