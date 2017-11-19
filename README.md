@@ -1,6 +1,25 @@
 # FlowLayout
 A FlowLayout for Android.
 
+## Download
+
+### Maven
+
+```
+<dependency>
+  <groupId>moe.yukisora</groupId>
+  <artifactId>flowlayout</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+
+### Gradle
+
+```
+compile 'moe.yukisora:flowlayout:1.0.0'
+```
+
 ## Usage
 
 ```
